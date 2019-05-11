@@ -51,6 +51,10 @@ class ParallelPipe(base_pipe.Pipe):
       p.build(self._qin, self._qout)
       self._pipes.append(p)
 
+  def start(self):
+    [p.start() for p in self._pipes]
+    super(ParallelPipe, self).start()
+
   def wrap_up(self):
     [p.wrap_up() for p in self._pipes]
     super(ParallelPipe, self).wrap_up()

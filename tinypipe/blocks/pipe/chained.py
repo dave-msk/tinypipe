@@ -35,7 +35,7 @@ class ChainedPipe(base_pipe.Pipe):
     super(ChainedPipe, self).__init__()
     self._pipes = pipes
     self._capacity = gen_utils.val_or_default(capacity, 0)
-    self._cooldown_secs = gen_utils.val_or_default(cooldown_secs, 0.1)
+    self._cooldown_secs = gen_utils.val_or_default(cooldown_secs, 0.05)
 
   def _run(self):
     time.sleep(self._cooldown_secs)
@@ -51,6 +51,10 @@ class ChainedPipe(base_pipe.Pipe):
       p.build(qin, qout)
       qin = qout
     self._pipes[-1].build(qin, self._qout)
+
+  def start(self):
+    [p.start() for p in self._pipes]
+    super(ChainedPipe, self).start()
 
   def wrap_up(self):
     [p.wrap_up() for p in self._pipes]

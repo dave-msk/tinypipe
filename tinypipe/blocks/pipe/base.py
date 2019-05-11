@@ -48,7 +48,7 @@ class FetchRetryPipe(Pipe):
                fetch_time=None):
     super(FetchRetryPipe, self).__init__()
     self._max_retry = gen_utils.val_or_default(max_retry, 10)
-    self._fetch_time = gen_utils.val_or_default(fetch_time, 0.1)
+    self._fetch_time = gen_utils.val_or_default(fetch_time, 0.01)
     self._retry_count = 0
 
   def _fetch_data(self):
