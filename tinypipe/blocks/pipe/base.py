@@ -23,6 +23,32 @@ from tinypipe.utils import general as gen_utils
 
 
 class Pipe(base_block.Block):
+  """Operation unit of pipeline.
+
+  A Pipe acts as a function that takes inputs from its input queue. Results
+  are fed to the output queue (if present). Each Pipe operates in its own
+  thread, so every unit runs in parallel in the pipeline.
+
+  Descendants are required to implement the following methods:
+
+  - `_run`: This is where the operation logic lives. It should do the following:
+
+      1. Fetch data from input queue.
+      2. Process data
+      3. Feed result into output queue (if present).
+
+  - `_ready_to_terminate`: Indicates whether the Pipe is ready to terminate.
+      Typically, this checks if all input data is processed.
+
+  A Pipe must be built through `build(qin, qout)` before running, where
+  `qin` and `qout` are `queue.Queue` instances. `qin` is the input queue from
+  which the operation fetches data, and `qout` is the output queue to which
+  the results are fed. While `qin` is required, `qout` is optional. If `qout` is
+  not provided, it is interpreted that outputs are not required.
+
+  The Pipe will keep running until `wrap_up()` is called, which signals the
+  pipe to shutdown after completing processing the remaining inputs.
+  """
   def __init__(self):
     super(Pipe, self).__init__()
     self._qin = None

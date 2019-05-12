@@ -31,6 +31,12 @@ class ParallelPipe(base_pipe.Pipe):
     # 1. `pipe_init_fn`: Function that takes no argument, returns a new `Pipe`
     # 2. `num_pipes`: Positive integer
     # 3. `cooldown_secs`: positive float
+    test_pipe = pipe_init_fn()
+    if not isinstance(test_pipe, base_pipe.Pipe):
+      raise TypeError("`pipe_init_fn` must be a function with no argument "
+                      "that returns a `Pipe` instance. Object returned: {}"
+                      .format(type(test_pipe)))
+    del test_pipe
 
     super(ParallelPipe, self).__init__()
     self._pipes = []
