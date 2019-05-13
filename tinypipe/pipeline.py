@@ -30,7 +30,7 @@ class Pipeline(object):
   Usage of `Pipeline` involves the following stages:
     1. Construct `Pipeline` by defining the responsible `Pipe` and append them
        to the pipeline in order.
-    2. Build the `Pipeline` with `pipeline.build()`.
+    2. (Optional) Build the `Pipeline` with `pipeline.build()`.
     3. Start the `Pipeline` with `pipeline.start()`.
     4. Feed in each data to be processed by `pipeline.put(data)`.
     5. Signal `Pipeline` to wrap up with `pipeline.join()`
@@ -79,10 +79,9 @@ class Pipeline(object):
   # NOTE: One can call `pipeline.extend(pipes)` instead
   ```
 
-  Build and start the pipeline:
+  Build (optional) and start the pipeline:
 
   ```python
-  pipeline.build()
   pipeline.start()
   ```
 
@@ -155,8 +154,7 @@ class Pipeline(object):
 
   def start(self):
     if not self._built:
-      raise RuntimeError("Pipeline must be built before running. "
-                         "Call `build()` before `start()`.")
+      self.build()
     self._running = True
     self._chain.start()
 

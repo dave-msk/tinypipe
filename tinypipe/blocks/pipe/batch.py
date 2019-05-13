@@ -22,6 +22,7 @@ from tinypipe.blocks.pipe import base as base_pipe
 
 
 class BatchPipe(base_pipe.FetchRetryPipe):
+  """Groups data into batches."""
   def __init__(self,
                batch_size,
                max_retry=None,
