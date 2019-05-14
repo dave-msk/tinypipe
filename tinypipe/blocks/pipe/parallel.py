@@ -23,6 +23,30 @@ from tinypipe.utils import general as gen_utils
 
 
 class ParallelPipe(base_pipe.Pipe):
+  """Identical copies of `Pipe` arranged in parallel.
+
+  Each pipe runs in an individual thread, sharing the same input and output
+  queues. Therefore, the theoretical throughput of this pipe would be
+  `num_parallel_pipes` times that of a single one.
+
+  A zero-argument `pipe_init_fn` that creates a new `Pipe` instance is expected.
+  This could be simply a lambda-wrapped constructor call. For instance:
+
+  ```python
+  import tinypipe as tp
+
+  def f(data):
+    ...
+    return result
+
+  init_fn = lambda: tp.pipe.FunctionPipe(f)
+  pipe = tp.pipe.ParallelPipe(init_fn, num_parallel_pipes=4)
+
+  pipeline = tp.Pipeline()
+  pipeline.append(pipe)
+  pipeline.start()
+  ```
+  """
   def __init__(self,
                pipe_init_fn,
                num_parallel_pipes=None,

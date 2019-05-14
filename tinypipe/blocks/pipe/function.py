@@ -22,6 +22,27 @@ from tinypipe.blocks.pipe import base as pipe_base
 
 
 class FunctionPipe(pipe_base.FetchRetryPipe):
+  """Simple function pipe.
+
+  This `Pipe` performs a simple function call on each data and feeds the
+  result into the output queue. A single-argument function must be provided.
+
+  For example:
+
+  ```python
+  import tinypipe as tp
+
+  def f(data):
+    ...
+    return result
+
+  pipe = tp.pipe.FunctionPipe(f)
+
+  pipeline = tp.Pipeline()
+  pipeline.append(pipe)
+  pipeline.start()
+  ```
+  """
   def __init__(self,
                fn,
                max_retry=None,
