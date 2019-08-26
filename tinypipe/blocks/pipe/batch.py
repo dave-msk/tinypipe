@@ -16,6 +16,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import collections
 import queue
 
 from tinypipe.blocks.pipe import base as base_pipe
@@ -44,3 +45,21 @@ class BatchPipe(base_pipe.FetchRetryPipe):
       self._qout.put(list(self._batched))
       [self._qin.task_done() for _ in range(len(self._batched))]
       self._batched.clear()
+
+
+class UnbatchPipe(base_pipe.FetchRetryPipe):
+  """Unbatches data into individual elements."""
+  def __init__(self, max_retry=None, fetch_time=None):
+    super(UnbatchPipe, self).__init__(
+        max_retry=max_retry, fetch_time=fetch_time)
+
+  def _run(self):
+    try:
+      data = self._fetch_data()
+      if isinstance(data, collections.Iterable):
+        for element in data: self._qout.put(element)
+      else:
+        self._qout.put(data)
+      self._qin.task_done()
+    except queue.Empty:
+      pass

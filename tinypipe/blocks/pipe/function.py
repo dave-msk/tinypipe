@@ -46,16 +46,18 @@ class FunctionPipe(pipe_base.FetchRetryPipe):
   def __init__(self,
                fn,
                max_retry=None,
-               fetch_time=None):
+               fetch_time=None,
+               drop_none=True):
     super(FunctionPipe, self).__init__(
         max_retry=max_retry, fetch_time=fetch_time)
     self._fn = fn
+    self._drop_none = drop_none
 
   def _run(self):
     try:
       data = self._fetch_data()
       out = self._fn(data)
-      if self._qout is not None:
+      if self._qout is not None and not (self._drop_none and out is None):
         self._qout.put(out)
       self._qin.task_done()
     except queue.Empty:
