@@ -45,7 +45,11 @@ pipeline.append(f3_pipe)
 
 # 3. Build & start the pipeline
 # Once the pipeline is started, it will keep trying to get data to process
-pipeline.build()
+#
+# The following `pipeline.build()` call is optional. `pipeline.start()` will
+# make the call if it is not called.
+#
+# pipeline.build()
 pipeline.start()
 
 # 5. Feed data into the pipeline
