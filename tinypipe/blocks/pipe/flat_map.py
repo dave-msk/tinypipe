@@ -44,7 +44,7 @@ class FlatMapPipe(pipe_base.FetchRetryPipe):
       data = self._fetch_data()
       it = self._fn(data)
       if not isinstance(it, collections.Iterable):
-        raise RuntimeError("")
+        raise RuntimeError("`fn` must return an iterable. Given: {}".format(it))
       if self._qout is not None:
         for out in it: self._qout.put(out)
       self._qin.task_done()
